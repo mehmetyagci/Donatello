@@ -9,12 +9,20 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Donatello
 {
     public class Startup
     {
+        private readonly IConfiguration configuration;
+
+        public Startup(IConfiguration configuration)
+        {
+            this.configuration = configuration;
+        }
+
         // This method gets called by the runtime. Use this method to add services to the container.
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
@@ -28,7 +36,7 @@ namespace Donatello
                 options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute()); 
             });
 
-            var connection = @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=Donatello;Trusted_Connection=True;ConnectRetryCount=0";
+            var connection = configuration.GetConnectionString("DefaultConnection");
 
             services.AddDbContext<DonatelloContext>(options =>
                 options.UseSqlServer(connection)
