@@ -1,0 +1,47 @@
+﻿@model Donatello.ViewModels.CardDetails
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<div class="container">
+    <h2>Details</h2>
+
+    <div class="row">
+        <form class="col s12" asp-controller="Card" asp-action="Details">
+            <div class="row">
+                <div class="input-field col s12">
+                    <input placeholder="Card contents"
+                           asp-for="Contents" />
+                    <label asp-for="Contents">Contents</label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-field col s12">
+                    <textarea placeholder="Notes"
+                              asp-for="Notes"
+                              class="materialize-textarea"></textarea>
+                    <label asp-for="Notes"></label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-field col s12">
+                    <select asp-for="Column" asp-items="Model.Columns"></select>
+                    <label asp-for="Column">Column</label>
+                </div>
+            </div>
+            <div class="row">
+                <input type="submit" value="Save" class="btn" />
+            </div>
+            <input asp-for="Id" type="hidden" />
+        </form>
+    </div>
+</div>
+
+<script type="text/javascript">
+    document.addEventListener('DOMContentLoaded', function () {
+        var elems = document.querySelectorAll('select');
+        var instances = M.FormSelect.init(elems);
+    });
+</script>
+

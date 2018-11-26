@@ -1,0 +1,15 @@
+﻿@model Donatello.ViewModels.NewBoard
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<div class="container">
+    <h2>Add a New Board</h2>
+    <form method="post" asp-controller="Home" asp-action="Create">
+        <label>Title</label>
+        <input asp-for="Title" type="text" name="title"  />
+        <input type="submit" class="btn" />        
+    </form>
+</div>
+
