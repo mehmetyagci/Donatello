@@ -68,6 +68,7 @@ namespace Donatello.Services
             {
                 var modelColumn = new BoardView.Column();
                 modelColumn.Title = column.Title;
+                modelColumn.Id = column.Id;
 
                 foreach (var card in column.Cards)
                 {
@@ -89,6 +90,13 @@ namespace Donatello.Services
             });
 
             dbContext.SaveChangesAsync();                
+        }
+
+        public void Move(MoveCardCommand command)
+        {
+            var card = dbContext.Cards.SingleOrDefault(x => x.Id == command.CardId);
+            card.ColumnId = command.ColumnId;
+            dbContext.SaveChanges();
         }
     }
 }
