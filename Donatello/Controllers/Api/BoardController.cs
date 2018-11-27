@@ -25,5 +25,12 @@ namespace Donatello.Controllers.Api
             boardService.Move(command);
             return Ok(new { Moved = true });
         }
+
+        [HttpPost("setColor")]
+        public IActionResult SetColor([FromBody]SetColorCommand command)
+        {
+            this.boardService.SetColor(command);
+            return Ok(new { Changed = true });
+        }
     }
 }

@@ -53,6 +53,13 @@ namespace Donatello.Services
             dbContext.SaveChanges();
         }
 
+        public void SetColor(SetColorCommand command)
+        {
+            var board = dbContext.Boards.SingleOrDefault(x => x.Id == command.BoardId);
+            board.BackgroundColor = command.Color;
+            dbContext.SaveChanges();
+        }
+
         public BoardView GetBoard(int id)
         {
             var model = new BoardView();
@@ -63,7 +70,8 @@ namespace Donatello.Services
                 .SingleOrDefault(x => x.Id == id);
 
             model.Id = board.Id;
-            
+            model.Color = board.BackgroundColor;
+
             foreach (var column in board.Columns)
             {
                 var modelColumn = new BoardView.Column();
