@@ -89,13 +89,21 @@
             <input type="hidden" id="BoardId" value="@Model.Id" />
             <input type="color" id="BoardColor" />
         </div>
-    </div>   
-   
+    </div>
+
     <div class="row">
         @foreach (var column in Model.Columns)
         {
             <div class="col m2">
-                <h3>@column.Title</h3>
+                <h3>
+                    @column.Title
+                    <a asp-controller="Board"
+                       asp-action="Notifications"
+                       asp-route-boardid="@Model.Id"
+                       asp-route-columnid="@column.Id">
+                        <i class="material-icons">settings</i>
+                    </a>
+                </h3>
 
                 <div class="column" style="min-height: 660px" id="@column.Id">
                     @foreach (var card in column.Cards)

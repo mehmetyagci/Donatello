@@ -41,6 +41,18 @@ namespace Donatello.Controllers
             return View(viewModel);
         }
 
-      
+        [HttpGet]
+        public IActionResult Notifications(int boardId, int columnId)
+        {
+            var settings = boardService.GetNotificationPreferences(boardId, columnId);
+            return View(settings);
+        }
+
+        [HttpPost]
+        public IActionResult Notifications(NotificationSettings viewModel)
+        {
+            boardService.SaveNotificationPreference(viewModel);
+            return RedirectToAction(nameof(Index), new { id = viewModel.BoardId });
+        }      
     }
 }

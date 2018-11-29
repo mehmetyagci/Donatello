@@ -30,6 +30,7 @@ namespace Donatello
             // Dependency Injection
             services.AddScoped<BoardService>();
             services.AddScoped<CardService>();
+            services.AddScoped<EmailService>();
 
             services.AddMvc(options =>
             {

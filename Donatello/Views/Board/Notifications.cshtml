@@ -1,0 +1,31 @@
+﻿@model Donatello.ViewModels.NotificationSettings
+@{
+    ViewData["Title"] = "Board Notifications";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col s12">
+            <h2>Notifications</h2>
+            <form asp-action="Notifications" asp-controller="Board">
+                <div class="row">
+                    <div class="col s6">
+                        Enter the email address of someone you want to inform when cards are moved into this column.
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="input-field col s6">
+                        <input type="text"
+                               asp-for="EmailAddress"
+                               placeholder="e.g. myagci@myagci.com" />
+                        <label asp-for="EmailAddress">Email address</label>
+                    </div>
+                </div>
+                <input type="hidden" asp-for="ColumnId" />
+                <input type="hidden" asp-for="BoardId" />
+                <button type="submit" class="btn">Save</button>
+            </form>
+        </div>
+    </div>
+</div>
+

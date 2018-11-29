@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Mail;
 using System.Threading.Tasks;
 
 namespace Donatello.Services
@@ -11,9 +12,12 @@ namespace Donatello.Services
     public class BoardService
     {
         private readonly DonatelloContext dbContext;
-        public BoardService(DonatelloContext dbContext)
+        private readonly EmailService emailService;
+
+        public BoardService(DonatelloContext dbContext, EmailService emailService)
         {
             this.dbContext = dbContext;
+            this.emailService = emailService;
         }
 
         public BoardList ListBoards()
@@ -28,7 +32,7 @@ namespace Donatello.Services
                     Title = board.Title
                 });
             }
-           
+
             return model;
         }
 
@@ -39,7 +43,7 @@ namespace Donatello.Services
                             .SingleOrDefault(x => x.Id == viewModel.Id);
 
             var firstColumn = board.Columns.FirstOrDefault();
-            if(firstColumn == null)
+            if (firstColumn == null)
             {
                 firstColumn = new Models.Column { Title = "ToDo" };
                 board.Columns.Add(firstColumn);
@@ -50,6 +54,24 @@ namespace Donatello.Services
                 Contents = viewModel.Contents
             });
 
+            dbContext.SaveChanges();
+        }
+
+        public NotificationSettings GetNotificationPreferences(int boardId, int columnId)
+        {
+            var column = dbContext.Columns.SingleOrDefault(x => x.Id == columnId);
+            return new NotificationSettings
+            {
+                BoardId = boardId,
+                ColumnId = columnId,
+                EmailAddress = column.NotificationEmail
+            };
+        }
+
+        public void SaveNotificationPreference(NotificationSettings viewModel)
+        {
+            var column = dbContext.Columns.SingleOrDefault(x => x.Id == viewModel.ColumnId);
+            column.NotificationEmail = viewModel.EmailAddress;
             dbContext.SaveChanges();
         }
 
@@ -86,18 +108,18 @@ namespace Donatello.Services
                     modelColumn.Cards.Add(modelCard);
                 }
                 model.Columns.Add(modelColumn);
-            }           
+            }
             return model;
-        }       
+        }
 
-        internal void  AddBoard(NewBoard viewModel)
+        internal void AddBoard(NewBoard viewModel)
         {
             dbContext.Boards.Add(new Models.Board
             {
                 Title = viewModel.Title
             });
 
-            dbContext.SaveChangesAsync();                
+            dbContext.SaveChangesAsync();
         }
 
         public void Move(MoveCardCommand command)
@@ -105,6 +127,9 @@ namespace Donatello.Services
             var card = dbContext.Cards.SingleOrDefault(x => x.Id == command.CardId);
             card.ColumnId = command.ColumnId;
             dbContext.SaveChanges();
+
+            var column = dbContext.Columns.SingleOrDefault(x => x.Id == command.ColumnId);
+            emailService.SendCardMovedNotification(card, column);
         }
     }
 }
