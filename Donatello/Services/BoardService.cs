@@ -57,6 +57,13 @@ namespace Donatello.Services
             dbContext.SaveChanges();
         }
 
+        public void SetTitle(SetTitleCommand command)
+        {
+            var board = dbContext.Boards.SingleOrDefault(x => x.Id == command.BoardId);
+            board.Title = command.Title;
+            dbContext.SaveChanges();
+        }
+
         public NotificationSettings GetNotificationPreferences(int boardId, int columnId)
         {
             var column = dbContext.Columns.SingleOrDefault(x => x.Id == columnId);
@@ -93,6 +100,7 @@ namespace Donatello.Services
 
             model.Id = board.Id;
             model.Color = board.BackgroundColor;
+            model.Title = board.Title;
 
             foreach (var column in board.Columns)
             {

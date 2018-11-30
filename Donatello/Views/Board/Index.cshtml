@@ -72,7 +72,49 @@
     });
 </script>
 
+<script>
+    $(function () {      
+        var title = document.getElementsByName("title")[0];
+        title.onblur = function (e) {
+            debugger;
+            console.log(title.innerText);
+            $.ajax({
+                type: "POST",
+                dataType: "json",
+                contentType: "application/json",
+                url: "/api/Board/setTitle",
+                beforeSend: function (request) {
+                    request.setRequestHeader("RequestVerificationToken",
+                        $('#RequestVerificationToken').val());
+                },
+                data: JSON.stringify({
+                    title: title.innerText,
+                    boardId: $('#BoardId').val()
+                }),
+            });
+        }
+
+        title.onkeydown = function (e) {
+            if (e.keyCode === 13) {
+                e.preventDefault();
+                title.blur();
+            }
+        };
+    });
+</script>
+
 <div class="container">
+    <div class="row" style="line-height: 4em; border-bottom: 1px solid #cccccc;">
+        <div class="col s6">
+            <span contenteditable="true" name="title" style="font-size: 1.8em">
+                @Model.Title
+            </span>
+        </div>
+        <div class="col s2">
+            <input type="hidden" id="BoardId" value="@Model.Id" />
+            <input type="color" id="BoardColor" />
+        </div>
+    </div>
     <div class="row">
         <div class="col s10">
             @if (Model.Columns.Count > 0)
@@ -85,11 +127,8 @@
                 </a>
             }
         </div>
-        <div class="col s2">
-            <input type="hidden" id="BoardId" value="@Model.Id" />
-            <input type="color" id="BoardColor" />
-        </div>
     </div>
+
 
     <div class="row">
         @foreach (var column in Model.Columns)

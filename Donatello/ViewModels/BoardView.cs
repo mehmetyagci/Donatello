@@ -10,6 +10,7 @@ namespace Donatello.ViewModels
         public int Id { get; set; }
         public string Color { get; set; }
         public List<Column> Columns { get; set; } = new List<Column>();
+        public string Title { get;  set; }
 
         public class Column
         {
